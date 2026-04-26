@@ -1,0 +1,209 @@
+<div class="add-edit-container">
+  <div class="form-header">
+    <h1>{{ isEditMode ? 'Edit Property' : 'Add New Property' }}</h1>
+    <button class="btn-close" (click)="goBack()">✕</button>
+  </div>
+
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Loading property...</p>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="!loading" class="property-form">
+    <div class="form-section">
+      <h3>Basic Information</h3>
+
+      <div class="form-group">
+        <label for="title">Property Title *</label>
+        <input
+          type="text"
+          id="title"
+          class="form-control"
+          formControlName="title"
+          placeholder="e.g., Modern Downtown Apartment"
+          [class.is-invalid]="submitted && form.get('title')?.invalid"
+        />
+        <span class="error-message" *ngIf="submitted && form.get('title')?.invalid">
+          {{ getErrorMessage('title') }}
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description *</label>
+        <textarea
+          id="description"
+          class="form-control"
+          formControlName="description"
+          placeholder="Enter detailed description..."
+          rows="4"
+          [class.is-invalid]="submitted && form.get('description')?.invalid"
+        ></textarea>
+        <span class="error-message" *ngIf="submitted && form.get('description')?.invalid">
+          {{ getErrorMessage('description') }}
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="location">Location *</label>
+        <input
+          type="text"
+          id="location"
+          class="form-control"
+          formControlName="location"
+          placeholder="e.g., Downtown, City Center"
+          [class.is-invalid]="submitted && form.get('location')?.invalid"
+        />
+        <span class="error-message" *ngIf="submitted && form.get('location')?.invalid">
+          {{ getErrorMessage('location') }}
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label for="imageUrl">Image URL *</label>
+        <input
+          type="url"
+          id="imageUrl"
+          class="form-control"
+          formControlName="imageUrl"
+          placeholder="https://..."
+          [class.is-invalid]="submitted && form.get('imageUrl')?.invalid"
+        />
+        <span class="error-message" *ngIf="submitted && form.get('imageUrl')?.invalid">
+          {{ getErrorMessage('imageUrl') }}
+        </span>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>Property Details</h3>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="price">Price ($) *</label>
+          <input
+            type="number"
+            id="price"
+            class="form-control"
+            formControlName="price"
+            placeholder="0"
+            [class.is-invalid]="submitted && form.get('price')?.invalid"
+          />
+          <span class="error-message" *ngIf="submitted && form.get('price')?.invalid">
+            {{ getErrorMessage('price') }}
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="type">Property Type *</label>
+          <select
+            id="type"
+            class="form-control"
+            formControlName="type"
+            [class.is-invalid]="submitted && form.get('type')?.invalid"
+          >
+            <option value="">Select Type</option>
+            <option *ngFor="let type of propertyTypes" [value]="type">
+              {{ type | titlecase }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="status">Status *</label>
+          <select
+            id="status"
+            class="form-control"
+            formControlName="status"
+            [class.is-invalid]="submitted && form.get('status')?.invalid"
+          >
+            <option value="">Select Status</option>
+            <option *ngFor="let status of propertyStatuses" [value]="status">
+              {{ status | titlecase }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="bedrooms">Bedrooms *</label>
+          <input
+            type="number"
+            id="bedrooms"
+            class="form-control"
+            formControlName="bedrooms"
+            placeholder="0"
+            min="0"
+            [class.is-invalid]="submitted && form.get('bedrooms')?.invalid"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="bathrooms">Bathrooms *</label>
+          <input
+            type="number"
+            id="bathrooms"
+            class="form-control"
+            formControlName="bathrooms"
+            placeholder="0"
+            min="0"
+            [class.is-invalid]="submitted && form.get('bathrooms')?.invalid"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="squareFeet">Square Feet *</label>
+          <input
+            type="number"
+            id="squareFeet"
+            class="form-control"
+            formControlName="squareFeet"
+            placeholder="0"
+            min="1"
+            [class.is-invalid]="submitted && form.get('squareFeet')?.invalid"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3>Additional Information</h3>
+
+      <div class="form-group">
+        <label for="features">Features (comma-separated)</label>
+        <input
+          type="text"
+          id="features"
+          class="form-control"
+          formControlName="features"
+          placeholder="e.g., Gym, Pool, Security, Parking"
+        />
+        <small>Enter features separated by commas</small>
+      </div>
+
+      <div class="form-group">
+        <label for="agent">Agent Name *</label>
+        <input
+          type="text"
+          id="agent"
+          class="form-control"
+          formControlName="agent"
+          placeholder="John Doe"
+          [class.is-invalid]="submitted && form.get('agent')?.invalid"
+        />
+        <span class="error-message" *ngIf="submitted && form.get('agent')?.invalid">
+          {{ getErrorMessage('agent') }}
+        </span>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">
+        {{ isEditMode ? '💾 Update Property' : '✚ Add Property' }}
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="goBack()">
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

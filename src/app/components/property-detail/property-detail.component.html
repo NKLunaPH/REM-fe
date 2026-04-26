@@ -1,0 +1,120 @@
+<div class="property-detail-container">
+  <div class="detail-header">
+    <button class="btn-back" (click)="goBack()">← Back to Properties</button>
+    <div class="header-actions">
+      <button class="btn btn-primary" (click)="editProperty()" *ngIf="property">
+        ✏️ Edit
+      </button>
+      <button class="btn btn-danger" (click)="deleteProperty()" *ngIf="property">
+        🗑️ Delete
+      </button>
+    </div>
+  </div>
+
+  <div class="loading" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Loading property details...</p>
+  </div>
+
+  <div class="property-detail" *ngIf="!loading && property">
+    <div class="detail-image">
+      <img [src]="property.imageUrl" [alt]="property.title" />
+      <span [class]="'status-badge ' + getStatusColor(property.status)">
+        {{ property.status | uppercase }}
+      </span>
+    </div>
+
+    <div class="detail-content">
+      <div class="main-section">
+        <h1 class="property-title">{{ property.title }}</h1>
+
+        <div class="location-section">
+          <span class="location-icon">📍</span>
+          <span class="location">{{ property.location }}</span>
+        </div>
+
+        <div class="price-section">
+          <span class="label">Price:</span>
+          <span class="price">{{ formatPrice(property.price) }}</span>
+        </div>
+
+        <p class="description">{{ property.description }}</p>
+
+        <div class="info-grid">
+          <div class="info-item" *ngIf="property.bedrooms > 0">
+            <span class="info-label">Bedrooms</span>
+            <span class="info-value">{{ property.bedrooms }}</span>
+          </div>
+          <div class="info-item" *ngIf="property.bathrooms > 0">
+            <span class="info-label">Bathrooms</span>
+            <span class="info-value">{{ property.bathrooms }}</span>
+          </div>
+          <div class="info-item" *ngIf="property.squareFeet">
+            <span class="info-label">Square Feet</span>
+            <span class="info-value">{{ property.squareFeet | number }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Property Type</span>
+            <span class="info-value">{{ property.type | uppercase }}</span>
+          </div>
+        </div>
+
+        <div class="features-section" *ngIf="property.features.length">
+          <h3>Features & Amenities</h3>
+          <div class="features-list">
+            <span class="feature-badge" *ngFor="let feature of property.features">
+              {{ feature }}
+            </span>
+          </div>
+        </div>
+
+        <div class="agent-section" *ngIf="property.agent">
+          <h3>Agent Information</h3>
+          <div class="agent-card">
+            <div class="agent-avatar">👤</div>
+            <div class="agent-info">
+              <h4>{{ property.agent }}</h4>
+              <button class="btn btn-secondary" (click)="contactAgent()">
+                📞 Contact Agent
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar">
+        <div class="quick-info">
+          <h3>Quick Information</h3>
+          <div class="info-row">
+            <span class="label">Status:</span>
+            <span [class]="'status ' + getStatusColor(property.status)">
+              {{ property.status | uppercase }}
+            </span>
+          </div>
+          <div class="info-row">
+            <span class="label">Listed Date:</span>
+            <span>{{ property.createdDate | date:'shortDate' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Property ID:</span>
+            <span class="property-id">{{ property.id }}</span>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <button class="btn btn-primary full-width" (click)="contactAgent()">
+            📧 Inquire Now
+          </button>
+          <button class="btn btn-secondary full-width">
+            ❤️ Save Property
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-property" *ngIf="!loading && !property">
+    <p>Property not found</p>
+    <button class="btn btn-primary" (click)="goBack()">Go Back</button>
+  </div>
+</div>

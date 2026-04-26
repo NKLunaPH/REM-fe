@@ -1,0 +1,119 @@
+<div class="property-list-container">
+  <div class="header">
+    <div class="header-content">
+      <h1>Real Estate Management System</h1>
+      <button class="btn btn-primary" (click)="addNewProperty()">
+        <span class="btn-icon">+</span> Add New Property
+      </button>
+    </div>
+  </div>
+
+  <div class="filters-section">
+    <div class="search-box">
+      <input type="text" placeholder="Search by title, location, or type..." [(ngModel)]="searchQuery"
+        (ngModelChange)="onSearch($event)" class="search-input" />
+    </div>
+
+    <div class="filter-controls">
+      <div class="filter-group">
+        <label for="sort">Sort By:</label>
+        <select id="sort" [(ngModel)]="sortOption" (ngModelChange)="onSortChange($event)" class="select-control">
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="newest">Newest First</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="type">Property Type:</label>
+        <select id="type" [(ngModel)]="filterType" (ngModelChange)="onFilterTypeChange($event)" class="select-control">
+          <option value="">All Types</option>
+          <option value="house">House</option>
+          <option value="apartment">Apartment</option>
+          <option value="condo">Condo</option>
+          <option value="land">Land</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="status">Status:</label>
+        <select id="status" [(ngModel)]="filterStatus" (ngModelChange)="onFilterStatusChange($event)"
+          class="select-control">
+          <option value="">All Status</option>
+          <option value="available">Available</option>
+          <option value="pending">Pending</option>
+          <option value="sold">Sold</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading" *ngIf="loading$ | async">
+    <div class="spinner"></div>
+    <p>Loading properties...</p>
+  </div>
+
+  <div class="properties-grid" *ngIf="!(loading$ | async)">
+    <div class="property-card" *ngFor="let property of properties$ | async" (click)="viewPropertyDetails(property)">
+      <div class="property-image">
+        <img [src]="property.imageUrl" [alt]="property.title" />
+        <span [class]="'status-badge ' + getStatusColor(property.status)">
+          {{ property.status | uppercase }}
+        </span>
+      </div>
+
+      <div class="property-content">
+        <h3 class="property-title">{{ property.title }}</h3>
+        <p class="property-location">
+          <span class="location-icon">📍</span> {{ property.location }}
+        </p>
+
+        <div class="property-details">
+          <div class="detail-item" *ngIf="property.bedrooms > 0">
+            <span class="detail-icon">🛏️</span>
+            <span>{{ property.bedrooms }} Beds</span>
+          </div>
+          <div class="detail-item" *ngIf="property.bathrooms > 0">
+            <span class="detail-icon">🚿</span>
+            <span>{{ property.bathrooms }} Baths</span>
+          </div>
+          <div class="detail-item" *ngIf="property.squareFeet">
+            <span class="detail-icon">📐</span>
+            <span>{{ property.squareFeet | number }} sqft</span>
+          </div>
+        </div>
+
+        <div class="property-description">
+          {{ property.description | slice:0:80 }}...
+        </div>
+
+        <div class="property-features" *ngIf="property.features.length">
+          <span class="feature-tag" *ngFor="let feature of property.features | slice:0:2">
+            {{ feature }}
+          </span>
+          <span class="feature-tag more" *ngIf="property.features.length > 2">
+            +{{ property.features.length - 2 }} more
+          </span>
+        </div>
+
+        <div class="property-footer">
+          <div class="price">
+            {{ formatPrice(property.price) }}
+          </div>
+          <div class="actions">
+            <button class="btn btn-sm btn-edit" (click)="editProperty($event, property)" title="Edit">
+              ✏️
+            </button>
+            <button class="btn btn-sm btn-delete" (click)="deleteProperty($event, property)" title="Delete">
+              🗑️
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-results" *ngIf="!(loading$ | async) && (properties$ | async)?.length === 0">
+    <p>No properties found matching your search criteria.</p>
+  </div>
+</div>
