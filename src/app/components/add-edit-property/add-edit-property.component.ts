@@ -112,11 +112,11 @@ export class AddEditPropertyComponent implements OnInit {
       this.propertyState.addProperty(newProperty);
     }
 
-    this.router.navigate(['/']);
+    this.router.navigate(['/property-list']);
   }
 
   goBack(): void {
-    this.router.navigate(['/']);
+    this.router.navigate(['/property-list']);
   }
 
   getErrorMessage(controlName: string): string {

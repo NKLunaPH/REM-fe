@@ -32,7 +32,7 @@ export class PropertyDetailComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/']);
+    this.router.navigate(['/property-list']);
   }
 
   editProperty(): void {
@@ -44,7 +44,7 @@ export class PropertyDetailComponent implements OnInit {
   deleteProperty(): void {
     if (this.property && confirm(`Are you sure you want to delete "${this.property.title}"?`)) {
       this.propertyState.deleteProperty(this.property.id);
-      this.router.navigate(['/']);
+      this.router.navigate(['/property-list']);
     }
   }
 
